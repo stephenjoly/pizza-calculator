@@ -1,0 +1,8 @@
+services:
+  pizza-calculator:
+    ports:
+      - 127.0.0.1:50818:80
+    restart: unless-stopped
+    image: ghcr.io/stephenjoly/pizza-calculator/pizza-calculator:local-20260331002726
+    env_file:
+      - /Users/stephenjoly/Documents/Coding/pizza-calculator/.deploy-wizard/staging.env.local

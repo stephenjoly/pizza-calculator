@@ -1,0 +1,13 @@
+{
+  "name": "pizza-calculator",
+  "routerName": "pizza-calculator-rtr",
+  "serviceName": "pizza-calculator-svc",
+  "hostname": "pizza-calculator.stephenjoly.net",
+  "backendUrl": [
+    "http://10.87.111.253:80"
+  ],
+  "entryPoints": [
+    "websecure"
+  ],
+  "tls": true
+}

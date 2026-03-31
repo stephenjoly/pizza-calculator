@@ -1,0 +1,13 @@
+http:
+  routers:
+    pizza-calculator-rtr:
+      rule: Host(`pizza-calculator.stephenjoly.net`)
+      service: pizza-calculator-svc
+      entryPoints:
+        - websecure
+      tls: {}
+  services:
+    pizza-calculator-svc:
+      loadBalancer:
+        servers:
+          - url: http://10.87.111.253:80

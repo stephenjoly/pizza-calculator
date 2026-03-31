@@ -1,0 +1,10 @@
+.git
+.DS_Store
+node_modules
+dist
+build
+.deploy-wizard
+.env
+.env.*
+npm-debug.log*
+yarn-error.log*

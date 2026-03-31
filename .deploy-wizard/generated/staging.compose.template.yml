@@ -1,0 +1,9 @@
+services:
+  pizza-calculator:
+    ports:
+      - 80:80
+    restart: unless-stopped
+    image: ghcr.io/stephenjoly/pizza-calculator/pizza-calculator:__DEPLOY_WIZARD_IMAGE_TAG__
+    pull_policy: always
+    env_file:
+      - /home/stephen/docker/appdata/pizza-calculator/staging.env

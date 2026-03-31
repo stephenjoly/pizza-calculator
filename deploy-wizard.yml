@@ -1,0 +1,36 @@
+version: 1
+profile: stephen-home-lab
+project:
+  slug: pizza-calculator
+  displayName: Pizza Calculator
+github:
+  owner: stephenjoly
+  repo: pizza-calculator
+  branch: main
+registry:
+  host: ghcr.io
+  image: pizza-calculator
+compose:
+  sourceFiles:
+    - compose.yml
+  managedServices:
+    - pizza-calculator
+  publicService: pizza-calculator
+  publicContainerPort: 80
+deployment:
+  composeFileName: pizza-calculator.yml
+  proxyFileName: pizza-calculator.yml
+  remoteEnvFile: /home/stephen/docker/appdata/pizza-calculator/staging.env
+  localEnvTemplate: .deploy-wizard/staging.env.example
+  localEnvFile: .deploy-wizard/staging.env.local
+  publishedPort: 80
+  healthCheckPath: ""
+  backendHost: 10.87.111.253
+proxy:
+  routes:
+    - name: pizza-calculator
+      hosts:
+        - pizza-calculator.stephenjoly.net
+      entryPoints:
+        - websecure
+      tls: true

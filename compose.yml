@@ -1,0 +1,7 @@
+services:
+  pizza-calculator:
+    build:
+      context: .
+    ports:
+      - "9009:80"
+    restart: unless-stopped
