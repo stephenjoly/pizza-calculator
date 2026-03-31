@@ -78,4 +78,26 @@ describe('App', () => {
     expect(within(caloriePanel!).getAllByText('11,405').length).toBeGreaterThan(0)
     expect(within(caloriePanel!).getByText(/^Mozzarella$/i)).toBeInTheDocument()
   })
+
+  it('supports hash-based navigation for static hosting', async () => {
+    const user = userEvent.setup()
+    const originalUrl = `${window.location.pathname}${window.location.hash}`
+
+    window.history.replaceState({}, '', '/#sources')
+
+    render(<App />)
+
+    expect(
+      screen.getByRole('heading', { name: /calorie sources/i }),
+    ).toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: /^calculator$/i }))
+
+    expect(window.location.hash).toBe('')
+    expect(
+      screen.getByText(/Main recipe panel for dough ball size/i),
+    ).toBeInTheDocument()
+
+    window.history.replaceState({}, '', originalUrl || '/')
+  })
 })

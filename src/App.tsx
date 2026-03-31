@@ -23,13 +23,27 @@ import type { CalculatorInput, RecipeType, ThicknessKey } from './types'
 
 type Page = 'calculator' | 'sources'
 
-function getPageFromPath(pathname: string): Page {
-  return pathname === '/sources' ? 'sources' : 'calculator'
+const APP_BASE_PATH = import.meta.env.BASE_URL
+
+function getPageFromLocation(location: Location): Page {
+  const hashPage = location.hash.replace(/^#\/?/, '')
+
+  if (hashPage === 'sources') {
+    return 'sources'
+  }
+
+  const pathname = location.pathname.replace(/\/+$/, '') || '/'
+
+  return pathname.endsWith('/sources') ? 'sources' : 'calculator'
+}
+
+function getPageUrl(page: Page): string {
+  return page === 'sources' ? `${APP_BASE_PATH}#sources` : APP_BASE_PATH
 }
 
 function App() {
   const [page, setPage] = useState<Page>(() =>
-    getPageFromPath(window.location.pathname),
+    getPageFromLocation(window.location),
   )
   const [recipeType, setRecipeType] = useState<RecipeType>(DEFAULT_INPUT.recipeType)
   const [pizzaSize, setPizzaSize] = useState(DEFAULT_INPUT.pizzaSize)
@@ -44,13 +58,17 @@ function App() {
   )
 
   useEffect(() => {
-    function handlePopState() {
-      setPage(getPageFromPath(window.location.pathname))
+    function handleLocationChange() {
+      setPage(getPageFromLocation(window.location))
     }
 
-    window.addEventListener('popstate', handlePopState)
+    window.addEventListener('hashchange', handleLocationChange)
+    window.addEventListener('popstate', handleLocationChange)
 
-    return () => window.removeEventListener('popstate', handlePopState)
+    return () => {
+      window.removeEventListener('hashchange', handleLocationChange)
+      window.removeEventListener('popstate', handleLocationChange)
+    }
   }, [])
 
   useEffect(() => {
@@ -89,10 +107,10 @@ function App() {
   const selectedRecipe = RECIPE_CONFIG[recipeType]
 
   function navigateTo(nextPage: Page) {
-    const nextPath = nextPage === 'sources' ? '/sources' : '/'
+    const nextUrl = getPageUrl(nextPage)
 
-    if (window.location.pathname !== nextPath) {
-      window.history.pushState({}, '', nextPath)
+    if (`${window.location.pathname}${window.location.hash}` !== nextUrl) {
+      window.history.pushState({}, '', nextUrl)
     }
 
     setPage(nextPage)
